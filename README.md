@@ -18,7 +18,9 @@ Useful python and R packages:
 Your tasks:
 
 1. Preprocess the data: stop word removal, stemming, remove numbers if necessary and tokenize it (use suitable libraries for these tasks). Then, try to make two forms from your original dataset, unigram and bigram, run tfidf on each of the grams and rank the top features (words or pair words). Report the top 20 features by their value in each dataset.
-2. Split your data (unigram and bigram separately) randomly into a training and testing set (e.g. 70%-30%). Train MultinomialNB (Multinomial Nave Bayes) and SVM using the training data. Then run your test data. Report the confusion matrix and accuracy for each of the two algorithms. Explain how confusion matrix is used for accuracy. which algorithm has higher accuracy on each dataset and why? Note: for the purpose of this assignment, you will have:
+2. Split your data (unigram and bigram separately) randomly into a training and testing set (e.g. 70%-30%). Train MultinomialNB (Multinomial Nave Bayes) and SVM using the training data. Then run your test data. Report the confusion matrix and accuracy for each of the two algorithms. Explain how confusion matrix is used for accuracy. which algorithm has higher accuracy on each dataset and why? 
+
+Note: for the purpose of this assignment, you will have:
 * two datasets in total (unigram and bigram)
 * four confusion matrixes (two algorithms and two datasets)
 * two accuracies
