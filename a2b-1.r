@@ -24,12 +24,12 @@ bigramTokenizer <- BigramTokenizer <- function(x) NGramTokenizer(x, Weka_control
 dtmUnigram <- DocumentTermMatrix(cryptSpaceCorpus, control = list(weighting = function(x) weightTfIdf(x, normalize = TRUE)))
 print(dtmUnigram)
 dtmUnigram <- removeSparseTerms(dtmUnigram, 0.9)
-unigramTopTerms <- (sort(colSums(as.matrix(dtmUnigram)), decreasing = TRUE)[1:20])
+unigramTopTerms <- (sort(colSums(as.matrix(dtmUnigram)/160), decreasing = TRUE)[1:20])
 print(unigramTopTerms)
 
 #create bigram DTM, remove sparse terms, and print top 20 bigrams
 dtmBigram <- DocumentTermMatrix(cryptSpaceCorpus, control = list(tokenize = bigramTokenizer, weighting = function(x) weightTfIdf(x, normalize = TRUE)))
 print(dtmBigram)
 dtmBigram <- removeSparseTerms(dtmBigram, 0.875)
-bigramTopTerms <- (sort(colSums(as.matrix(dtmBigram)), decreasing = TRUE)[1:20])
+bigramTopTerms <- (sort(colSums(as.matrix(dtmBigram)/160), decreasing = TRUE)[1:20])
 print(bigramTopTerms)
