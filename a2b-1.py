@@ -1,8 +1,3 @@
-
-# coding: utf-8
-
-# In[17]:
-
 import os
 import string
 import nltk
@@ -15,7 +10,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 corpus = {}
 snowball_stemmer = SnowballStemmer("english")
-
 
 def text_stemmer(tokens, stemmer):
     words_stem = []
@@ -43,7 +37,6 @@ def top_mean_features(tfidf_matrix, feature_names):
     tfidf_means = np.mean(D, axis=0)
     return top_tfidf_features(tfidf_means, feature_names)
 
-
 table_punc = str.maketrans({key: None for key in string.punctuation})
 table_nums = str.maketrans({key: None for key in string.digits})
 
@@ -59,11 +52,20 @@ for subdir, dirs, files in os.walk('newsgroups'):
             text_nonums = text_nopunc.translate(table_nums)
             corpus[file] = text_nonums
 
-tfidf_vectorizer = TfidfVectorizer( tokenizer=text_tokenizer, ngram_range = (2,2), stop_words='english' )
-tfidf_matrix = tfidf_vectorizer.fit_transform(corpus.values())
+tfidf_vectorizer_unigram = TfidfVectorizer( tokenizer=text_tokenizer, stop_words='english' )
+tfidf_vectorizer_bigram = TfidfVectorizer( tokenizer=text_tokenizer, ngram_range = (2,2), stop_words='english' )
 
-feature_names = tfidf_vectorizer.get_feature_names()
+tfidf_matrix_unigram = tfidf_vectorizer_unigram.fit_transform(corpus.values())
+tfidf_matrix_bigram = tfidf_vectorizer_bigram.fit_transform(corpus.values())
 
-top_terms = top_mean_features(tfidf_matrix, feature_names)
+feature_names_unigram = tfidf_vectorizer_unigram.get_feature_names()
+feature_names_bigram = tfidf_vectorizer_bigram.get_feature_names()
 
-print(top_terms)
+top_terms_unigram = top_mean_features(tfidf_matrix_unigram, feature_names_unigram)
+top_terms_bigram = top_mean_features(tfidf_matrix_bigram, feature_names_bigram)
+
+print ("Top Unigrams: ")
+print(top_terms_unigram)
+print()
+print("Top Bigrams:")
+print(top_terms_bigram)
