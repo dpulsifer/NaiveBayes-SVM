@@ -23,6 +23,8 @@ corpus <- tm_map (corpus, stemDocument)
 #convert to tf-idf weighted document term matrix
 dtmUnigram <- DocumentTermMatrix(corpus, control = list(weighting = function(x) weightTfIdf(x, normalize = TRUE)))
 
+dtmUnigram <- removeSparseTerms(dtmUnigram, 0.995)
+
 #convert to matrix and then dataframe
 unigramModel <- as.matrix(dtmUnigram)
 unigramModel <- as.data.frame(unigramModel)
@@ -46,14 +48,20 @@ trainingColumnNumber <- grep("training", names(unigramModel))
 trainingUnigramModel <- unigramModel[unigramModel$training==1,-trainingColumnNumber]
 testingUnigramModel <- unigramModel[unigramModel$training==0,-trainingColumnNumber]
 
-#run naive bayes algorithm
-unigramNB <- naiveBayes(as.factor(Category)~., data = trainingUnigramModel)
-
 #get number of training indication column
 categoryColumnNumber <- grep("Category", names(testingUnigramModel))
 
-#run predictions with testing data and generate confusion matrix
+#run naive bayes and svm algorithms
+unigramNB <- naiveBayes(as.factor(Category)~., data = trainingUnigramModel)
+unigramSVM <- svm(as.factor(Category)~., data = trainingUnigramModel)
+
+#run predictions with testing data
 unigramNB_Test <- predict(unigramNB, testingUnigramModel[,-categoryColumnNumber], na.action = na.pass)
+unigramSVM_Test <- predict(unigramSVM, testingUnigramModel[,-categoryColumnNumber], na.action = na.pass)
+
+#generate tables
 confusion_matrix <- table(pred=unigramNB_Test, true=testingUnigramModel$Category)
+svm_accuracies <- table(pred=unigramSVM_Test, true=testingUnigramModel$Category)
 
 print(confusion_matrix)
+print(svm_accuracies)

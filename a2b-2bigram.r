@@ -53,14 +53,20 @@ trainingColumnNumber <- grep("training", names(bigramModel))
 trainingBigramModel <- bigramModel[bigramModel$training==1,-trainingColumnNumber]
 testingBigramModel <- bigramModel[bigramModel$training==0,-trainingColumnNumber]
 
-#run naive bayes algorithm
-bigramNB <- naiveBayes(Category~., data = trainingBigramModel)
-
 #get number of training indication column
 categoryColumnNumber <- grep("Category", names(testingBigramModel))
 
-#run predictions with testing data and generate confusion matrix
+#run naive bayes and svm algorithms
+bigramNB <- naiveBayes(Category~., data = trainingBigramModel)
+bigramSVM <- svm(Category~., data = trainingBigramModel)
+
+#run predictions with testing data
 bigramNB_Test <- predict(bigramNB, testingBigramModel[,-categoryColumnNumber], na.action = na.pass)
+bigramSVM_Test <- predict(bigramSVM, testingBigramModel[,-categoryColumnNumber], na.action = na.pass)
+
+#generate tables
 confusion_matrix <- table(pred=bigramNB_Test, true=testingBigramModel$Category)
+svm_accuracies <- table(pred=bigramSVM_Test, true=testingBigramModel$Category)
 
 print(confusion_matrix)
+print(svm_accuracies)
