@@ -7,7 +7,7 @@ library(e1071)
 library(Matrix)
 library(class)
 
-#options(mc.cores=1)
+options(mc.cores=1)
 
 setwd("/Users/duncanpulsifer/Documents/Dalhousie/CSCI\ 3151/Assignments/a2")
 
@@ -24,7 +24,9 @@ corpus <- tm_map (corpus, stemDocument)
 bigramTokenizer <- BigramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = 2, max = 2))
 
 #convert to tf-idf weighted document term matrix
-dtmBigram <- DocumentTermMatrix(corpus, control = list(tokenize = bigramTokenizer, weighting = function(x) weightTfIdf(x, normalize = TRUE)))
+dtmBigram <- DocumentTermMatrix(corpus, control = list(tokenize = bigramTokenizer,weighting = function(x) weightTfIdf(x, normalize = TRUE)))
+
+dtmBigram <- removeSparseTerms(dtmBigram, 0.99)
 
 #convert to matrix and then dataframe
 bigramModel <- as.matrix(dtmBigram)
@@ -42,6 +44,8 @@ for ( i in 1:nrow(bigramModel) ) {
 	if ( 120 < i & i <= 160 ) { bigramModel$Category[i] <- 4 }
 }
 
+bigramModel$Category <- as.factor(bigramModel$Category)
+
 #get number of training indication column for set division
 trainingColumnNumber <- grep("training", names(bigramModel))
 
@@ -49,18 +53,14 @@ trainingColumnNumber <- grep("training", names(bigramModel))
 trainingBigramModel <- bigramModel[bigramModel$training==1,-trainingColumnNumber]
 testingBigramModel <- bigramModel[bigramModel$training==0,-trainingColumnNumber]
 
-print(dtmBigram)
-
 #run naive bayes algorithm
-#bigramNB <- naiveBayes(as.factor(Category)~., data = trainingBigramModel)
-
-
+bigramNB <- naiveBayes(Category~., data = trainingBigramModel)
 
 #get number of training indication column
-#categoryColumnNumber <- grep("Category", names(testingBigramModel))
+categoryColumnNumber <- grep("Category", names(testingBigramModel))
 
 #run predictions with testing data and generate confusion matrix
-#bigramNB_Test <- predict(bigramNB, testingBigramModel[,-categoryColumnNumber], na.action = na.pass)
-#confusion_matrix <- table(pred=bigramNB_Test, true=testingBigramModel$Category)
+bigramNB_Test <- predict(bigramNB, testingBigramModel[,-categoryColumnNumber], na.action = na.pass)
+confusion_matrix <- table(pred=bigramNB_Test, true=testingBigramModel$Category)
 
-#print(confusion_matrix)
+print(confusion_matrix)
