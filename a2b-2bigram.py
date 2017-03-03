@@ -10,6 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import confusion_matrix
+from sklearn import svm
 
 corpus = {}
 categories = []
@@ -58,7 +59,17 @@ train_data, test_data, train_category, test_category = train_test_split(tfidf_ma
 classifier = MultinomialNB().fit(train_data, train_category)
 predicted = classifier.predict(test_data)
 
-#plot confusion matrix
-conf_matrix = confusion_matrix(test_category, predicted)
+#create and train svm classifier and run test data
+svm_classifier = svm.LinearSVC()
+svm_classifier.fit(train_data, train_category)
+svm_predicted = svm_classifier.predict(test_data)
 
-print (conf_matrix)
+#plot confusion matrices
+nb_conf_matrix = confusion_matrix(test_category, predicted)
+svm_conf_matrix = confusion_matrix(test_category, svm_predicted)
+
+print ("Unigram")
+print ("Naive Bayes Confusion Matrix:")
+print (nb_conf_matrix)
+print ("SVM Confusion Matrix:")
+print (svm_conf_matrix)
