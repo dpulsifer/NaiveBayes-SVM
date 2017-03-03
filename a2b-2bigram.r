@@ -58,7 +58,7 @@ categoryColumnNumber <- grep("Category", names(testingBigramModel))
 
 #run naive bayes and svm algorithms
 bigramNB <- naiveBayes(Category~., data = trainingBigramModel)
-bigramSVM <- svm(Category~., data = trainingBigramModel)
+bigramSVM <- svm(Category~., data = trainingBigramModel, kernel='linear', cost = 62.5)
 
 #run predictions with testing data
 bigramNB_Test <- predict(bigramNB, testingBigramModel[,-categoryColumnNumber], na.action = na.pass)
@@ -68,5 +68,7 @@ bigramSVM_Test <- predict(bigramSVM, testingBigramModel[,-categoryColumnNumber],
 confusion_matrix <- table(pred=bigramNB_Test, true=testingBigramModel$Category)
 svm_accuracies <- table(pred=bigramSVM_Test, true=testingBigramModel$Category)
 
+print("Bigram Naive Bayes Output:")
 print(confusion_matrix)
+print("Bigram SVM Output:")
 print(svm_accuracies)
