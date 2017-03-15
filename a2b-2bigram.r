@@ -26,7 +26,7 @@ bigramTokenizer <- BigramTokenizer <- function(x) NGramTokenizer(x, Weka_control
 #convert to tf-idf weighted document term matrix
 dtmBigram <- DocumentTermMatrix(corpus, control = list(tokenize = bigramTokenizer,weighting = function(x) weightTfIdf(x, normalize = TRUE)))
 
-dtmBigram <- removeSparseTerms(dtmBigram, 0.99)
+dtmBigram <- removeSparseTerms(dtmBigram, 0.95)
 
 #convert to matrix and then dataframe
 bigramModel <- as.matrix(dtmBigram)
