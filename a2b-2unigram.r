@@ -23,7 +23,7 @@ corpus <- tm_map (corpus, stemDocument)
 #convert to tf-idf weighted document term matrix
 dtmUnigram <- DocumentTermMatrix(corpus, control = list(weighting = function(x) weightTfIdf(x, normalize = TRUE)))
 
-#dtmUnigram <- removeSparseTerms(dtmUnigram, 0.99)
+#dtmUnigram <- removeSparseTerms(dtmUnigram, 0.95)
 
 #convert to matrix and then dataframe
 unigramModel <- as.matrix(dtmUnigram)
